@@ -59,6 +59,62 @@ ADB is available in emulator packages under out/host/linux_x86/bin.
 Alternatively, it may be downloaded as part of the
 [Android SDK](http://developer.android.com/sdk/index.html).
 
+Testing on Desktop build
+========================
+
+You can download the latest build of the desktop client from [this location](http://ftp.mozilla.org/pub/mozilla.org/b2g/nightly/latest-mozilla-b2g18/), 
+but make sure you download the appropriate file for your operating system. 
+
+Note : Unfortunately, due to [Bug 832469](https://bugzilla.mozilla.org/show_bug.cgi?id=832469) the nightly desktop builds do not currently work on Windows, so you will 
+need either Mac or Linux to continue :
+
+  * **Mac**: b2g-[VERSION].multi.mac64.dmg
+  * **Linux (32bit)**: b2g-[VERSION].multi.linux-i686.tar.bz2
+  * **Linux (64bit)**: b2g-[VERSION].multi.linux-x86_64.tar.bz2
+
+Note : If you do not have the operating systems installed on your machine, a virtual machine is fine as well.
+
+Once downloaded, you will need to extract the contents to a local folder. For the purposes of the rest 
+of this guide, I’ll refer to this location as `$B2G_HOME`.
+
+
+Add the line `user_pref('marionette.force-local', true);` to your gaia/profile/user.js file, which on :
+
+  * **Mac** is located in $B2G_HOME/B2G.app/Contents/MacOS 
+  * **Linux** is located in $B2G_HOME/b2g
+ 
+
+Now you’ve got the simulator running, you can clone and run the automated UI tests against it. 
+You will need to have [git](http://git-scm.com/book/en/Getting-Started-Installing-Git) and [Python](http://www.python.org/getit/) installed.
+
+First, clone the gaia-ui-tests repository using the following command line, where `$WORKSPACE` is your local workspace folder:
+
+```
+cd $WORKSPACE
+git clone git://github.com/mozilla/gaia-ui-tests.git gaia-ui-tests
+cd gaia-ui-tests
+```
+
+If you’re using virtual environments, create a new environment and activate it. You will only need to create it once, but will need to 
+activate it whenever you wish to run the tests:
+
+```
+virtualenv .env
+source .env/bin/activate
+```
+
+Now you need to install the test harness (gaiatest) and all of it’s dependencies:
+
+`python setup.py develop`
+
+Once this is done, you will have everything you need to run the tests. Because we’re running against the desktop client we must filter 
+out all tests that are not appropriate. This list may grow, but it currently includes tests that use: antenna, bluetooth, carrier, 
+camera, sdcard, and wifi. You will probably also want to exclude any tests that are expected to fail (xfail). To run the tests, use the following command:
+
+`gaiatest --address=localhost:2828 --type=b2g-antenna-bluetooth-carrier-camera-sdcard-wifi-xfail gaiatest/tests/manifest.ini`
+
+You should then start to see the tests running.
+
 Testvars
 ========
 We use the --testvars option to pass in local variables, particularly those that cannot be checked into the repository. For example in gaia-ui-tests these variables can be your private login credentials, phone number or details of your WiFi connection.
@@ -127,108 +183,3 @@ We follow [PEP8](http://www.python.org/dev/peps/pep-0008/) for formatting, altho
 80-character line length.
 
 
-Testing on Desktop build
-========================
-
-Introduction
-============
-
-This is a description of how to run the tests on the nightly desktop client builds
-
-
-Downloading the latest Desktop Client
-=====================================
-
-You can download the latest build of the desktop client from [this location](http://ftp.mozilla.org/pub/mozilla.org/b2g/nightly/latest-mozilla-b2g18/), 
-but make sure you download the appropriate file for your operating system. 
-
-Note : Unfortunately, due to [Bug 832469](https://bugzilla.mozilla.org/show_bug.cgi?id=832469) the nightly desktop builds do not currently work on Windows, so you will 
-need either Mac or Linux to continue :
-
-  * **Mac**: b2g-[VERSION].multi.mac64.dmg
-  * **Linux (32bit)**: b2g-[VERSION].multi.linux-i686.tar.bz2
-  * **Linux (64bit)**: b2g-[VERSION].multi.linux-x86_64.tar.bz2
-
-Note : If you do not have the operating systems installed on your machine, a virtual machine is fine as well.
-
-Once downloaded, you will need to extract the contents to a local folder. For the purposes of the rest 
-of this guide, I’ll refer to this location as `$B2G_HOME`.
-
-
-Enabling Marionette
-===================
-
-Add the line `user_pref('marionette.force-local', true);` to your gaia/profile/user.js file, which on :
-
-  * **Mac** is located in $B2G_HOME/B2G.app/Contents/MacOS 
-  * **Linux** is located in $B2G_HOME/b2g
- 
- 
-Starting Firefox OS
-===================
-
-You can start Firefox OS either by :
-
-  * double clicking $B2G_HOME/B2G.app **(Mac)**
-  * running $B2G_HOME/b2g/b2g **(Linux)**
-  
-Complete the configuration steps and optionally follow the tour, and you will be presented with the lock screen. 
-Unlock by dragging the bar up and clicking the padlock. You should be presented with the home screen.
-
-
-Running the Tests
-=================
-
-Now you’ve got the simulator running, you can clone and run the automated UI tests against it. 
-You will need to have [git](http://git-scm.com/book/en/Getting-Started-Installing-Git) and [Python](http://www.python.org/getit/) installed.
-
-First, clone the gaia-ui-tests repository using the following command line, where `$WORKSPACE` is your local workspace folder:
-
-```
-cd $WORKSPACE
-git clone git://github.com/mozilla/gaia-ui-tests.git gaia-ui-tests
-cd gaia-ui-tests
-```
-
-If you’re using virtual environments, create a new environment and activate it. You will only need to create it once, but will need to 
-activate it whenever you wish to run the tests:
-
-```
-virtualenv .env
-source .env/bin/activate
-```
-
-Now you need to install the test harness (gaiatest) and all of it’s dependencies:
-
-`python setup.py develop`
-
-Once this is done, you will have everything you need to run the tests. Because we’re running against the desktop client we must filter 
-out all tests that are not appropriate. This list may grow, but it currently includes tests that use: antenna, bluetooth, carrier, 
-camera, sdcard, and wifi. You will probably also want to exclude any tests that are expected to fail (xfail). To run the tests, use the following command:
-
-`gaiatest --address=localhost:2828 --type=b2g-antenna-bluetooth-carrier-camera-sdcard-wifi-xfail gaiatest/tests/manifest.ini`
-
-You should then start to see the tests running, with output similar to the following:
-
-```
-starting httpd
-running webserver on http://199.91.170.216:47413/
-TEST-START test_settings.py
-test_get_all_settings (test_settings.TestSettings) ... ok
-test_set_named_setting (test_settings.TestSettings) ... ok
-test_set_volume (test_settings.TestSettings) ... ok
------------------------------------------------------------------
-Ran 3 tests in 3.234s
-
-OK
-```
-
-The first tests that run are unit tests for the gaiatest harness, so you won’t immediately see much happening in the simulator.
-You may also encounter [Bug 844498](https://bugzilla.mozilla.org/show_bug.cgi?id=844498), which has the nasty side-effect of causing all remaining tests to fail. 
-If this happens just try running the suite again for now.
-
-
-Conclusion
-==========
-
-Once that the environment is setup, testing on the Desktop builds can be done.

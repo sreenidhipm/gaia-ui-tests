@@ -83,33 +83,7 @@ Add the line `user_pref('marionette.force-local', true);` to your gaia/profile/u
   * **Mac** is located in $B2G_HOME/B2G.app/Contents/MacOS 
   * **Linux** is located in $B2G_HOME/b2g
  
-
-Now you’ve got the simulator running, you can clone and run the automated UI tests against it. 
-You will need to have [git](http://git-scm.com/book/en/Getting-Started-Installing-Git) and [Python](http://www.python.org/getit/) installed.
-
-First, clone the gaia-ui-tests repository using the following command line, where `$WORKSPACE` is your local workspace folder:
-
-```
-cd $WORKSPACE
-git clone git://github.com/mozilla/gaia-ui-tests.git gaia-ui-tests
-cd gaia-ui-tests
-```
-
-If you’re using virtual environments, create a new environment and activate it. You will only need to create it once, but will need to 
-activate it whenever you wish to run the tests:
-
-```
-virtualenv .env
-source .env/bin/activate
-```
-
-Now you need to install the test harness (gaiatest) and all of it’s dependencies:
-
-`python setup.py develop`
-
-Once this is done, you will have everything you need to run the tests. Because we’re running against the desktop client we must filter 
-out all tests that are not appropriate. This list may grow, but it currently includes tests that use: antenna, bluetooth, carrier, 
-camera, sdcard, and wifi. You will probably also want to exclude any tests that are expected to fail (xfail). To run the tests, use the following command:
+Because we’re running against the desktop client we must filter out all tests that are not appropriate.To run the tests, use the following command:
 
 `gaiatest --address=localhost:2828 --type=b2g-antenna-bluetooth-carrier-camera-sdcard-wifi-xfail gaiatest/tests/manifest.ini`
 

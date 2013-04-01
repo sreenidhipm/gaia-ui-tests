@@ -63,7 +63,7 @@ Testing on Desktop build
 ========================
 
 You can download the latest build of the desktop client from [this location](http://ftp.mozilla.org/pub/mozilla.org/b2g/nightly/latest-mozilla-b2g18/), 
-but make sure you download the appropriate file for your operating system. 
+but make sure you download the suitable file for your operating system. 
 
 Note : Unfortunately, due to [Bug 832469](https://bugzilla.mozilla.org/show_bug.cgi?id=832469) the nightly desktop builds do not currently work on Windows, so you will 
 need either Mac or Linux to continue :
